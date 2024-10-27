@@ -2,15 +2,18 @@ import * as React from 'react';
 import { ThemeProvider, createTheme, useMemo } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppAppBar from './components/AppAppBar';
-import { BrowserRouter as Router, Route, Routes, } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Footer from './components/Footer';
 import Divider from '@mui/material/Divider';
 import { Box, Container } from '@mui/material';
 import SignIn from './pages/Login/SignIn';
 import Blog from './pages/News/Blog';
 import SignUp from './pages/Login/SignUp';
-
+import { AuthContext } from './AuthContext';
+import { AuthProvider } from './AuthContext';
 export default function App() {
+  const authContext = React.useContext(AuthContext);
+  const isAuthenticated = AuthContext.isAuthenticated;
   const [mode, setMode] = React.useState('dark');
 
   /*React.useEffect(() => {
@@ -100,37 +103,34 @@ export default function App() {
 
   //<ThemeProvider theme={defaultTheme}>
   return (
-    <Router>
-      <ThemeProvider theme={theme}>
-        <CssBaseline enableColorScheme />
+    <AuthProvider>
+      <Router>
+        <ThemeProvider theme={theme}>
+          <CssBaseline enableColorScheme />
 
-        <AppAppBar mode={mode}
-          toggleColorMode={toggleColorMode} />
-        <Box >
-          <Container
-            maxWidth="lg"
-            component="main"
-            sx={{ display: 'flex', flexDirection: 'column', my: 16, gap: 4 }}
-          >
-            <Routes>
-              <Route path="/" element={<Blog />} />
-              <Route path="/breaking-news" element={<div>самые популярные новости</div>} />
-              <Route path="/profile" element={<div>Профиль</div>} />
-              <Route path="/login" element={<SignIn />} />
-              <Route path="/register" element={<SignUp />} />
+          <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
+          <Box>
+            <Container
+              maxWidth="lg"
+              component="main"
+              sx={{ display: 'flex', flexDirection: 'column', my: 16, gap: 4 }}
+            >
+              <Routes>
+                <Route path="/" element={<Blog />} />
+                <Route path="/breaking-news" element={<div>самые популярные новости</div>} />
+                <Route path="/profile" element={isAuthenticated ? <div>Профиль</div> : <div>Please log in to access this page</div>} />
+                <Route path="/login" element={<SignIn />} />
+                <Route path="/register" element={<SignUp />} />
 
-              <Route path="*" element={<div>404</div>} />
-            </Routes>
-          </Container>
+                <Route path="*" element={<div>404</div>} />
+              </Routes>
+            </Container>
 
-          {/*  <Divider />
-          <FAQ /> */}
-
-          <Divider />
-          <Footer />
-
-        </Box>
-      </ThemeProvider>
-    </Router>
+            <Divider />
+            <Footer />
+          </Box>
+        </ThemeProvider>
+      </Router>
+    </AuthProvider>
   );
 }
