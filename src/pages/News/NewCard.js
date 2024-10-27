@@ -11,7 +11,9 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import IconButton from '@mui/material/IconButton';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-function Author({ authors }) {
+import { Stack } from '@mui/material';
+/*
+function Author({ link }) {
     return (
         <Box
             sx={{
@@ -26,39 +28,30 @@ function Author({ authors }) {
             <Box
                 sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}
             >
-                <AvatarGroup max={3}>
-                    {authors.map((author, index) => (
-                        <Avatar
-                            key={index}
-                            alt={author.name}
-                            src={author.avatar}
-                            sx={{ width: 24, height: 24 }}
-                        />
-                    ))}
-                </AvatarGroup>
-                <Typography variant="caption">
-                    {authors.map((author) => author.name).join(', ')}
-                </Typography>
-            </Box>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    gap: 1,
-                    alignItems: 'center',
-                   
-            }}
-            >
-                <IconButton variant="contained" color="primary" size="small">
-                    <RemoveRedEyeIcon />
-                </IconButton>
-                <IconButton variant="contained" color="primary" size="small">
-                    <ThumbUpIcon />
-                </IconButton>
 
-            </Box>
-            
-        </Box>
+                <Typography variant="caption">
+                    {link.match(/:\/\/(.[^/]+)/)[1]}
+                </Typography >
+            </Box >
+    <Box
+        sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 1,
+            alignItems: 'center',
+
+        }}
+    >
+        <IconButton variant="contained" color="primary" size="small">
+            <RemoveRedEyeIcon />
+        </IconButton>
+        <IconButton variant="contained" color="primary" size="small">
+            <ThumbUpIcon />
+        </IconButton>
+
+    </Box>
+
+        </Box >
     );
 }
 
@@ -69,7 +62,7 @@ Author.propTypes = {
             name: PropTypes.string.isRequired,
         }),
     ).isRequired,
-};
+};*/
 
 const SyledCard = styled(Card)(({ theme }) => ({
     display: 'flex',
@@ -119,14 +112,26 @@ const NewCard = ({ data }) => {
 
             <SyledCardContent>
 
-                <Typography gutterBottom variant="h6" component="div">
+                <StyledTypography gutterBottom variant="h6" component="div">
                     {data.title}
-                </Typography>
+                </StyledTypography>
                 <StyledTypography variant="body2" color="text.secondary" gutterBottom>
                     {data.description}
                 </StyledTypography>
             </SyledCardContent>
-            <Author authors={data.authors} />
+            {/*<Author authors={data.authors} />*/}
+
+            <Stack direction="row" alignItems="center" spacing={1} sx={{ margin: 1 }}>
+                <Chip
+                    label={data.link.match(/:\/\/(.[^/]+)/)[1]}
+                    variant="outlined"
+                    color="primary"
+                    sx={{ marginRight: 1, borderRadius: 1 }} // Отступ справа для Chip
+                />
+                <IconButton color="primary">
+                    <ThumbUpIcon /> {/* Кнопка лайка */}
+                </IconButton>
+            </Stack>
         </SyledCard>
     )
 }

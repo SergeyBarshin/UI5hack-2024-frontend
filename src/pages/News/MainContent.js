@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import { Stack } from '@mui/material';
 import NewCard from './NewCard';
 import Pagination from '@mui/material/Pagination';
-
+import axios from 'axios';
 
 
 export default function MainContent({ cardData }) {
@@ -15,6 +16,8 @@ export default function MainContent({ cardData }) {
   // Состояние для отслеживания текущей страницы
   const [page, setPage] = React.useState(1);
 
+  // l = page*6+1 r = page*6 + itemsPerPage
+
   // Вычисляем общее количество страниц
   const pageCount = Math.ceil(items.length / itemsPerPage);
 
@@ -22,12 +25,39 @@ export default function MainContent({ cardData }) {
   const currentItems = items.slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
   // Обработчик для изменения страницы
+
+
+
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const fetchPosts = async (left, right) => {
+    setLoading(true);
+    setError(null); // Сбрасываем ошибку перед новым запросом
+    try {
+      const response = await axios.get('http://localhost:8000/posts', {
+        params: { left, right, user_id: 1 }, // Добавьте user_id, если это требуется
+      });
+      setPosts(response.data);
+    } catch (err) {
+      console.error('Ошибка при получении постов:', err);
+      setError(err.response?.data?.detail || 'Не удалось загрузить посты');
+    } finally {
+      setLoading(false); // Устанавливаем состояние загрузки в false в любом случае
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts(0, 6);
+  }, []);
+  // useEffect(() => {
+  //  fetchPosts(page * 6 + 1, page * 6 + itemsPerPage);
+  //}, [page]);
+
   const handlePageChange = (event, value) => {
     setPage(value);
   };
-
-
-
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: { xs: 'start', md: 'start' }, gap: 4 }}>

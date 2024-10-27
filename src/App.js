@@ -117,9 +117,10 @@ export default function App() {
               sx={{ display: 'flex', flexDirection: 'column', my: 16, gap: 4 }}
             >
               <Routes>
-                <Route path="/" element={isAuthenticated ? <Blog /> : <Navigate to="/login" />} />
+                {/*<Route path="/" element={isAuthenticated ? <Blog /> : <Navigate to="/login" />} />
                 <Route path="/breaking-news" element={<div>самые популярные новости</div>} />
-                <Route path="/profile" element={isAuthenticated ? <div>Профиль</div> : <Navigate to="/login" />} />
+                <Route path="/profile" element={isAuthenticated ? <div>Профиль</div> : <Navigate to="/login" />} />*/}
+                <Route path="/" element={<Blog />} />
                 <Route path="/login" element={<SignIn />} />
                 <Route path="/register" element={<SignUp />} />
 

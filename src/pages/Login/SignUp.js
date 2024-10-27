@@ -13,46 +13,7 @@ import { Input, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { useState } from 'react';
-const handleSubmit = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const [interests, setInterests] = useState('');
 
-    const handleRegister = async (e) => {
-        e.preventDefault();
-
-        try {
-            const response = await axios.post('http://localhost:3000/api/register', {
-                username,
-                password,
-                email,
-            });
-    
-            // Check if the registration was successful
-            if (response.status === 200) {
-                console.log('Registration successful:', response.data);
-                // Handle successful registration, e.g., redirect to the login page
-                // Replace the following line with your desired action
-                window.location.href = '/login';
-            } else {
-                console.error('Registration failed:', response.data);
-                // Handle failed registration, e.g., display an error message
-                // Replace the following lines with your desired error handling
-                setEmailError(true);
-                setEmailErrorMessage('Registration failed. Please try again.');
-            }
-            
-        } catch (error) {
-            console.error('There was an error!', error);
-            // Handle network or server errors, e.g., display an error message
-            // Replace the following lines with your desired error handling
-            setEmailError(true);
-            setEmailErrorMessage('There was an error. Please try again.');
-        }
-
-    };
-}
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -145,16 +106,31 @@ export default function SignUp(props) {
     };
 
     const handleSubmit = (event) => {
-        if (nameError || emailError || passwordError) {
-            event.preventDefault();
-            return;
-        }
+        event.preventDefault();
+
         const data = new FormData(event.currentTarget);
-        console.log({
-            name: data.get('name'),
-            email: data.get('email'),
-            password: data.get('password'),
+
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+            "username": data.get('name'),
+            "email": data.get('email'),
+            "password": data.get('password')
         });
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow"
+        };
+
+        fetch("http://localhost:8000/register", requestOptions)
+            .then((response) => response.text())
+            .then((result) => console.log(result))
+            .catch((error) => console.error(error));
+
     };
 
     return (
@@ -232,9 +208,9 @@ export default function SignUp(props) {
                         onClick={validateInputs}
                     >
                         Зарегестрироваться
-                        
+
                     </Button>
-                    
+
                     <Typography sx={{ textAlign: 'center' }}>
                         Уже зарегестрированы?{' '}
                         <span>
