@@ -8,7 +8,9 @@ import { Typography, Box } from '@mui/material';
 import PropTypes from 'prop-types';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
-
+import IconButton from '@mui/material/IconButton';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 function Author({ authors }) {
     return (
         <Box
@@ -38,7 +40,24 @@ function Author({ authors }) {
                     {authors.map((author) => author.name).join(', ')}
                 </Typography>
             </Box>
-            <Typography variant="caption">ЛАЙК\открыть</Typography>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: 1,
+                    alignItems: 'center',
+                   
+            }}
+            >
+                <IconButton variant="contained" color="primary" size="small">
+                    <RemoveRedEyeIcon />
+                </IconButton>
+                <IconButton variant="contained" color="primary" size="small">
+                    <ThumbUpIcon />
+                </IconButton>
+
+            </Box>
+            
         </Box>
     );
 }

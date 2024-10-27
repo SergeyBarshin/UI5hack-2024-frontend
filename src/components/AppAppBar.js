@@ -15,6 +15,7 @@ import Sitemark from './SitemarkIcon';
 import ToggleColorMode from './ToggleColorMode';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'; // Import the ExitToAppIcon
 
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
@@ -73,12 +74,17 @@ function AppAppBar({ mode, toggleColorMode, }) {
               alignItems: 'center',
             }}
           >
+            
             <ToggleColorMode
               data-screenshot="toggle-mode"
               mode={mode}
               toggleColorMode={toggleColorMode}
             />
-
+            <IconButton variant="outlined" sx={{ color: 'text.primary'}} size="small">
+              <StyledLink to="/" sx={{ color: 'text.primary', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <ExitToAppIcon sx={{ color: 'red', display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
+              </StyledLink>
+            </IconButton>
           </Box>
 
           <Box sx={{ display: { sm: 'flex', md: 'none' } }}>
