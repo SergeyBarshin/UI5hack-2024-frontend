@@ -11,6 +11,46 @@ import Typography from '@mui/material/Typography';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { Stack } from '@mui/material';
+import axios from 'axios';
+import { useState } from 'react';
+
+const handleSubmit = () => {
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+
+    const handleRegister = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.post('http://localhost:3000/api/register', {
+                password,
+                email,
+            });
+    
+            // Check if the registration was successful
+            if (response.status === 200) {
+                console.log('Registration successful:', response.data);
+                // Handle successful registration, e.g., redirect to the login page
+                // Replace the following line with your desired action
+                window.location.href = '/login';
+            } else {
+                console.error('Registration failed:', response.data);
+                // Handle failed registration, e.g., display an error message
+                // Replace the following lines with your desired error handling
+                setEmailError(true);
+                setEmailErrorMessage('Registration failed. Please try again.');
+            }
+            
+        } catch (error) {
+            console.error('There was an error!', error);
+            // Handle network or server errors, e.g., display an error message
+            // Replace the following lines with your desired error handling
+            setEmailError(true);
+            setEmailErrorMessage('There was an error. Please try again.');
+        }
+
+    };
+}
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -55,11 +95,13 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignIn(props) {
-    const [emailError, setEmailError] = React.useState(false);
-    const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-    const [passwordError, setPasswordError] = React.useState(false);
-    const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-    const [open, setOpen] = React.useState(false);
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState(false);
+    const [emailErrorMessage, setEmailErrorMessage] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
+    const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+
 
 
     const handleSubmit = (event) => {
@@ -133,6 +175,8 @@ export default function SignIn(props) {
                             name="email"
                             placeholder="your@email.com"
                             autoComplete="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             autoFocus
                             required
                             fullWidth
@@ -151,6 +195,8 @@ export default function SignIn(props) {
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             autoFocus
                             required
                             fullWidth
@@ -168,7 +214,7 @@ export default function SignIn(props) {
                         variant="contained"
                         onClick={validateInputs}
                     >
-                        Sign in
+                        Войти
                     </Button>
                     <Typography sx={{ textAlign: 'center' }}>
                         Еще нет аккаунта{' '}
@@ -181,6 +227,7 @@ export default function SignIn(props) {
                                 Регистрация
                             </Link>
                         </span>
+                        
                     </Typography>
                 </Box>
 

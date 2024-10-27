@@ -9,8 +9,50 @@ import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import MuiCard from '@mui/material/Card';
-import { Stack } from '@mui/material';
+import { Input, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import axios from 'axios';
+import { useState } from 'react';
+const handleSubmit = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [interests, setInterests] = useState('');
+
+    const handleRegister = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.post('http://localhost:3000/api/register', {
+                username,
+                password,
+                email,
+            });
+    
+            // Check if the registration was successful
+            if (response.status === 200) {
+                console.log('Registration successful:', response.data);
+                // Handle successful registration, e.g., redirect to the login page
+                // Replace the following line with your desired action
+                window.location.href = '/login';
+            } else {
+                console.error('Registration failed:', response.data);
+                // Handle failed registration, e.g., display an error message
+                // Replace the following lines with your desired error handling
+                setEmailError(true);
+                setEmailErrorMessage('Registration failed. Please try again.');
+            }
+            
+        } catch (error) {
+            console.error('There was an error!', error);
+            // Handle network or server errors, e.g., display an error message
+            // Replace the following lines with your desired error handling
+            setEmailError(true);
+            setEmailErrorMessage('There was an error. Please try again.');
+        }
+
+    };
+}
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -55,12 +97,15 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignUp(props) {
-    const [emailError, setEmailError] = React.useState(false);
-    const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-    const [passwordError, setPasswordError] = React.useState(false);
-    const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-    const [nameError, setNameError] = React.useState(false);
-    const [nameErrorMessage, setNameErrorMessage] = React.useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState(false);
+    const [emailErrorMessage, setEmailErrorMessage] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
+    const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+    const [nameError, setNameError] = useState(false);
+    const [nameErrorMessage, setNameErrorMessage] = useState('');
 
     const validateInputs = () => {
         const email = document.getElementById('email');
@@ -107,7 +152,6 @@ export default function SignUp(props) {
         const data = new FormData(event.currentTarget);
         console.log({
             name: data.get('name'),
-            lastName: data.get('lastName'),
             email: data.get('email'),
             password: data.get('password'),
         });
@@ -138,6 +182,8 @@ export default function SignUp(props) {
                             fullWidth
                             id="name"
                             placeholder="Jon Snow"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                             error={nameError}
                             helperText={nameErrorMessage}
                             color={nameError ? 'error' : 'primary'}
@@ -153,6 +199,8 @@ export default function SignUp(props) {
                             name="email"
                             autoComplete="email"
                             variant="outlined"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             error={emailError}
                             helperText={emailErrorMessage}
                             color={passwordError ? 'error' : 'primary'}
@@ -169,6 +217,8 @@ export default function SignUp(props) {
                             id="password"
                             autoComplete="new-password"
                             variant="outlined"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             error={passwordError}
                             helperText={passwordErrorMessage}
                             color={passwordError ? 'error' : 'primary'}
@@ -181,8 +231,10 @@ export default function SignUp(props) {
                         variant="contained"
                         onClick={validateInputs}
                     >
-                        Sign up
+                        Зарегестрироваться
+                        
                     </Button>
+                    
                     <Typography sx={{ textAlign: 'center' }}>
                         Уже зарегестрированы?{' '}
                         <span>

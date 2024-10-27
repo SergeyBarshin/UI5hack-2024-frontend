@@ -11,6 +11,7 @@ import Blog from './pages/News/Blog';
 import SignUp from './pages/Login/SignUp';
 import { AuthContext } from './AuthContext';
 import { AuthProvider } from './AuthContext';
+import { Navigate } from 'react-router-dom';
 export default function App() {
   const authContext = React.useContext(AuthContext);
   const isAuthenticated = AuthContext.isAuthenticated;
@@ -116,9 +117,9 @@ export default function App() {
               sx={{ display: 'flex', flexDirection: 'column', my: 16, gap: 4 }}
             >
               <Routes>
-                <Route path="/" element={<Blog />} />
+                <Route path="/" element={isAuthenticated ? <Blog /> : <Navigate to="/login" />} />
                 <Route path="/breaking-news" element={<div>самые популярные новости</div>} />
-                <Route path="/profile" element={isAuthenticated ? <div>Профиль</div> : <div>Please log in to access this page</div>} />
+                <Route path="/profile" element={isAuthenticated ? <div>Профиль</div> : <Navigate to="/login" />} />
                 <Route path="/login" element={<SignIn />} />
                 <Route path="/register" element={<SignUp />} />
 
